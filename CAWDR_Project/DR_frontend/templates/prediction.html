@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Server Metrics - AWS & Azure</title>
+    <style>
+        .server-metrics {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container {
+            margin-top: 20px;
+            padding: 20px;
+        }
+        .metric-table {
+            margin-top: 30px;
+        }
+        footer {
+            background: #2B2B2B;
+            padding: 15px;
+            color: #fff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#"><b>SERVER METRICS</b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/disindex">Logs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Metrics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<br/><br/><br/>
+<div class="container">
+    <h1 class="text-center">Detailed Server Metrics - AWS & Azure</h1>
+    <p class="text-center">Live detailed metrics of AWS and Azure servers for memory, disk I/O, network traffic, and system health.</p>
+
+    <div class="row server-metrics">
+        <div class="col-md-6">
+            <h5><i class="fa fa-bar-chart"></i> AWS Server Metrics</h5>
+            <canvas id="awsMetricsChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h5><i class="fa fa-bar-chart"></i> Azure Server Metrics</h5>
+            <canvas id="azureMetricsChart"></canvas>
+        </div>
+    </div>
+
+    <div class="metric-table">
+        <h5><i class="fa fa-list"></i> Detailed Logs and Metrics</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Server</th>
+                    <th>Metric</th>
+                    <th>Value</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-10-08 10:50:00</td>
+                    <td>AWS</td>
+                    <td>Memory Usage</td>
+                    <td>78%</td>
+                    <td><span class="badge badge-warning">High</span></td>
+                </tr>
+                <tr>
+                    <td>2024-10-08 10:51:12</td>
+                    <td>Azure</td>
+                    <td>Network Traffic (Outgoing)</td>
+                    <td>300 Mbps</td>
+                    <td><span class="badge badge-success">Normal</span></td>
+                </tr>
+                <tr>
+                    <td>2024-10-08 10:52:30</td>
+                    <td>AWS</td>
+                    <td>Disk I/O (Write)</td>
+                    <td>500 MB/s</td>
+                    <td><span class="badge badge-danger">Critical</span></td>
+                </tr>
+                <tr>
+                    <td>2024-10-08 10:53:15</td>
+                    <td>Azure</td>
+                    <td>Error Rate</td>
+                    <td>5 Errors/min</td>
+                    <td><span class="badge badge-danger">Critical</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2024 Disaster Shield. All Rights Reserved.</p>
+</footer>
+
+<script>
+    // Simulated data for AWS & Azure metrics
+    var awsMetricsData = {
+        memory: generateRandomData(),
+        diskIO: generateRandomData(),
+        networkTraffic: generateRandomData(),
+        errorRate: generateRandomData(0, 10)
+    };
+
+    var azureMetricsData = {
+        memory: generateRandomData(),
+        diskIO: generateRandomData(),
+        networkTraffic: generateRandomData(),
+        errorRate: generateRandomData(0, 10)
+    };
+
+    // Function to generate random data for charts
+    function generateRandomData(min = 50, max = 100) {
+        return Array.from({ length: 7 }, () => Math.floor(Math.random() * (max - min) + min));
+    }
+
+    // AWS Metrics Chart
+    var awsCtx = document.getElementById('awsMetricsChart').getContext('2d');
+    var awsMetricsChart = new Chart(awsCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Memory Usage', 'Disk I/O', 'Network Traffic', 'Error Rate'],
+            datasets: [
+                {
+                    label: 'AWS Metrics',
+                    data: [awsMetricsData.memory[0], awsMetricsData.diskIO[0], awsMetricsData.networkTraffic[0], awsMetricsData.errorRate[0]],
+                    backgroundColor: ['rgba(255, 99, 132, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(75, 192, 192, 0.7)', 'rgba(153, 102, 255, 0.7)']
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Azure Metrics Chart
+    var azureCtx = document.getElementById('azureMetricsChart').getContext('2d');
+    var azureMetricsChart = new Chart(azureCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Memory Usage', 'Disk I/O', 'Network Traffic', 'Error Rate'],
+            datasets: [
+                {
+                    label: 'Azure Metrics',
+                    data: [azureMetricsData.memory[0], azureMetricsData.diskIO[0], azureMetricsData.networkTraffic[0], azureMetricsData.errorRate[0]],
+                    backgroundColor: ['rgba(255, 159, 64, 0.7)', 'rgba(54, 162, 235, 0.7)', 'rgba(255, 206, 86, 0.7)', 'rgba(153, 102, 255, 0.7)']
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

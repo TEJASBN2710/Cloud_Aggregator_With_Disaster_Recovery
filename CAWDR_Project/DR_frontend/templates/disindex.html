@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Disaster Shield - Server Logs</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #main-footer {
+            color: #FFFFFF;
+            font-family: "Segoe UI";
+            background: #2B2B2B;
+            text-align: center;
+            margin-top: 75px;
+            padding: 16px;
+            bottom: 8px;
+        }
+        .server-card {
+            margin-top: 20px;
+        }
+        .card-title {
+            font-weight: bold;
+        }
+        .log-table {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+        .log-table table {
+            width: 100%;
+        }
+        .chart-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .chart {
+            width: 100%;
+            height: 200px;
+        }
+        .btn-stop {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="#"><b>SERVER MONITOR</b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Logs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/prediction">Verify Transactions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<br/><br/><br/>
+<div class="container">
+    <h1 class="text-center">Server Logs - AWS & Azure</h1>
+    <p class="text-center">Live monitoring of AWS and Azure server logs along with resource usage metrics and running graphs.</p>
+
+    <!-- Server Status Cards with Stop Buttons -->
+    <div class="row">
+        <div class="col-md-6 server-card">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa fa-server"></i> AWS Server Status</h5>
+                    <p id="aws-status">Status: <span class="badge badge-success">Running</span></p>
+                    <p>IP Address: 192.168.1.100</p>
+                    <p>Uptime: 34 days 12 hours</p>
+                    <!-- <button class="btn btn-danger btn-stop" onclick="stopServer('AWS')">Stop AWS Server</button> -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 server-card">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fa fa-server"></i> Azure Server Status</h5>
+                    <p id="azure-status">Status: <span class="badge badge-success">Running</span></p>
+                    <p>IP Address: 192.168.1.101</p>
+                    <p>Uptime: 22 days 5 hours</p>
+                    <!-- <button class="btn btn-danger btn-stop" onclick="stopServer('Azure')">Stop Azure Server</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Running Graphs -->
+    <div class="row">
+        <div class="col-md-4 chart-container">
+            <h5><i class="fa fa-line-chart"></i> Server Load Graph</h5>
+            <canvas id="serverLoadChart" class="chart"></canvas>
+        </div>
+        <div class="col-md-4 chart-container">
+            <h5><i class="fa fa-tachometer"></i> CPU Usage Graph</h5>
+            <canvas id="cpuUsageChart" class="chart"></canvas>
+        </div>
+        <div class="col-md-4 chart-container">
+            <h5><i class="fa fa-memory"></i> Memory Usage Graph</h5>
+            <canvas id="memoryUsageChart" class="chart"></canvas>
+        </div>
+    </div>
+
+    <!-- Log Table -->
+    <div class="log-table">
+        <h5><i class="fa fa-list"></i> Latest Server Logs</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Server</th>
+                    <th>Log Level</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody id="log-table-body">
+                <!-- Logs will be dynamically updated -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer id="main-footer">
+    <p>&copy; 2024 Disaster Shield. All Rights Reserved.</p>
+</footer>
+
+<script>
+function stopServer(server) {
+    alert(`Stopping ${server} server...`);
+}
+
+function updateServerStatus() {
+    document.getElementById('aws-status').innerHTML = `Status: <span class="badge badge-success">Running</span>`;
+}
+
+function updateLogs() {
+    const logTableBody = document.getElementById('log-table-body');
+    const timestamp = new Date().toLocaleString();
+    logTableBody.innerHTML += `
+        <tr>
+            <td>${timestamp}</td>
+            <td>AWS</td>
+            <td>INFO</td>
+            <td>Server running.</td>
+        </tr>`;
+}
+
+setInterval(() => {
+    updateLogs();
+    updateServerStatus();
+}, 5000);
+</script>
+<script>
+    // Function to create a new chart
+    function createChart(ctx, label, borderColor, backgroundColor) {
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [], // Empty initially; will populate dynamically
+                datasets: [{
+                    label: label,
+                    borderColor: borderColor,
+                    backgroundColor: backgroundColor,
+                    data: [], // Empty initially; will populate dynamically
+                    fill: true,
+                    tension: 0.4,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Time' } },
+                    y: { title: { display: true, text: label } }
+                }
+            }
+        });
+    }
+
+    // Get canvas elements for charts
+    const serverLoadCtx = document.getElementById('serverLoadChart').getContext('2d');
+    const cpuUsageCtx = document.getElementById('cpuUsageChart').getContext('2d');
+    const memoryUsageCtx = document.getElementById('memoryUsageChart').getContext('2d');
+
+    // Initialize charts
+    const serverLoadChart = createChart(serverLoadCtx, 'Server Load (%)', 'rgba(75, 192, 192, 1)', 'rgba(75, 192, 192, 0.2)');
+    const cpuUsageChart = createChart(cpuUsageCtx, 'CPU Usage (%)', 'rgba(255, 99, 132, 1)', 'rgba(255, 99, 132, 0.2)');
+    const memoryUsageChart = createChart(memoryUsageCtx, 'Memory Usage (MB)', 'rgba(54, 162, 235, 1)', 'rgba(54, 162, 235, 0.2)');
+
+    // Function to update chart data
+    function updateChart(chart, value) {
+        const currentTime = new Date().toLocaleTimeString(); // Get current time
+        if (chart.data.labels.length >= 10) {
+            chart.data.labels.shift(); // Remove oldest time
+            chart.data.datasets[0].data.shift(); // Remove oldest data
+        }
+        chart.data.labels.push(currentTime);
+        chart.data.datasets[0].data.push(value);
+        chart.update(); // Refresh chart
+    }
+
+    // Simulate random data updates
+    function simulateData() {
+        const serverLoad = Math.random() * 100; // Server load between 0-100%
+        const cpuUsage = Math.random() * 100; // CPU usage between 0-100%
+        const memoryUsage = Math.random() * 16000; // Memory usage between 0-16 GB
+
+        updateChart(serverLoadChart, serverLoad);
+        updateChart(cpuUsageChart, cpuUsage);
+        updateChart(memoryUsageChart, memoryUsage);
+    }
+
+    // Update charts every 2 seconds
+    setInterval(simulateData, 2000);
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

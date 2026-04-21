@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Service Control Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        .service-card {
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .service-title {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .service-info {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .status {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .details {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Zomato Food Service Control Panel</h1>
+
+    <div class="service-card">
+        <div class="service-title">Flask E-Commerce Service</div>
+        <div class="service-info">Status: <span class="status" id="service-status">Running</span></div>
+        <div class="service-info">This service powers the food delivery platform, handling restaurant listings, food ordering, and checkout processes.</div>
+        <div class="details">
+            <p><strong>Uptime:</strong> <span id="uptime">12 hours 34 minutes</span></p>
+            <p><strong>Last Restarted:</strong> <span id="last-restarted">2024-10-28 10:15:00</span></p>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <button id="startButton">Start Service</button>
+        <button id="stopButton">Stop Service</button>
+    </div>
+    
+    <div id="response" style="text-align: center; margin-top: 20px;"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#startButton').click(function() {
+            $.post('/start_server', function(data) {
+                $('#response').html(data); // Show the response message
+                $('#service-status').text('Running'); // Update status
+                $('#uptime').text('0 hours 0 minutes'); // Reset uptime
+                $('#last-restarted').text(new Date().toLocaleString()); // Update last restarted time
+                alert('Disaster recovery done! Server has started and data has been shared to azure storage blob.'); // Pop-up alert
+            });
+        });
+
+        $('#stopButton').click(function() {
+            $.post('/stop_server', function(data) {
+                $('#response').html(data); // Show the response message
+                $('#service-status').text('Stopped'); // Update status
+                alert('The website has been stopped operating. Please take necessary action.'); // Pop-up alert
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
